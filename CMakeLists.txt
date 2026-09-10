@@ -21,8 +21,9 @@ macro(set_from_environment VARIABLE)
 	endif()
 endmacro()
 set_from_environment(CompiledPluginsPath)
-if(NOT DEFINED CompiledPluginsPath)
-	message(FATAL_ERROR "CompiledPluginsPath is not set")
+if(NOT DEFINED CompiledPluginsPath OR "${CompiledPluginsPath}" STREQUAL "")
+	# Keep local configure/builds self-contained. CI and packagers may still override this with a deployment root.
+	set(CompiledPluginsPath "${CMAKE_BINARY_DIR}/plugins" CACHE PATH "Root directory for the copied plugin artifacts")
 endif()
 
 option(COPY_OUTPUT "Copy the output of build operations to the game directory" ON)
