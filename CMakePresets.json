@@ -147,6 +147,36 @@
         "value": "x64"
       },
       "cacheVariables": {
+        "ENABLE_SKYRIM_SE": {
+          "type": "BOOL",
+          "value": false
+        },
+        "ENABLE_SKYRIM_AE": {
+          "type": "BOOL",
+          "value": true
+        },
+        "ENABLE_SKYRIM_VR": {
+          "type": "BOOL",
+          "value": false
+        },
+        "CompiledPluginsPath": "${sourceDir}/out/build/vs2022-windows-ae-1170/plugins"
+      },
+      "displayName": "Skyrim AE 1.6.1170 (x64)",
+      "generator": "Visual Studio 17 2022",
+      "inherits": [
+        "cmake-dev",
+        "vcpkg",
+        "windows"
+      ],
+      "name": "vs2022-windows-ae-1170",
+      "toolset": "v143"
+    },
+    {
+      "architecture": {
+        "strategy": "set",
+        "value": "x64"
+      },
+      "cacheVariables": {
         "CMAKE_CXX_FLAGS": "/EHsc /MP /W4 /arch:AVX"
       },
       "generator": "Visual Studio 17 2022",
@@ -207,6 +237,12 @@
       "name": "avx2-release",
       "displayName": "Release",
       "configurePreset": "vs2022-windows-avx2",
+      "configuration": "Release"
+    },
+    {
+      "name": "windows-ae-1170-release",
+      "displayName": "Skyrim AE 1.6.1170 Release",
+      "configurePreset": "vs2022-windows-ae-1170",
       "configuration": "Release"
     }
   ],
