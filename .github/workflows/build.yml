@@ -184,10 +184,10 @@ jobs:
 
           # 2. Set the environment variable so the vcpkg toolchain sees it
           $env:VCPKG_BINARY_SOURCES = "clear;files,$BinaryCachePath,readwrite"
+          $env:VCPKG_ROOT = $env:VCPKG_INSTALLATION_ROOT
 
           # 3. Run the configuration
           cmake --preset ${{ matrix.preset }} `
-            -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" `
             -DVCPKG_MANIFEST_MODE=ON `
             -DCompiledPluginsPath="${{ github.workspace }}/out/build/${{ matrix.preset }}/plugins" `
             -DPROJECT_BUILD_INFO="${{ needs.prepare.outputs.build_info }}" `

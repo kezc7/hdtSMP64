@@ -1,4 +1,5 @@
 #include "ActorManager.h"
+#include "hdtSkyrimPhysicsWorld.h"
 
 #include "Events.h"
 #include "Hooks.h"
