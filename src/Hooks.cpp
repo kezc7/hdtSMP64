@@ -5,6 +5,7 @@
 #include "Hooks.h"
 
 //
+#include <chrono>
 #include <xbyak/xbyak.h>
 
 namespace Hooks
@@ -208,6 +209,18 @@ namespace Hooks
 
 	void MainHooks::Update(RE::Main* const a_this)
 	{
+		// doUpdate2ndStep from the previous frame may still reference HDT systems and
+		// their scene-graph-backed state. Complete it before Skyrim can mutate or destroy
+		// geometry during its update.
+		const auto waitStart = std::chrono::steady_clock::now();
+		hdt::SkyrimPhysicsWorld::get()->m_tasks.wait();
+		const auto waitMs = std::chrono::duration<float, std::milli>(
+			std::chrono::steady_clock::now() - waitStart)
+			.count();
+		if (waitMs > 1.0f) {
+			logger::debug("HDT pre-update task wait: {:.2f} ms", waitMs);
+		}
+
 		//
 		_Update(a_this);
 
