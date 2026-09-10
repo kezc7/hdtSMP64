@@ -211,6 +211,10 @@ namespace hdt
 
 	RE::BSEventNotifyControl ActorManager::ProcessEvent(const Events::FrameEvent*, RE::BSTEventSource<Events::FrameEvent>*)
 	{
+		if (Events::LoadGuard::IsBlocked()) {
+			return RE::BSEventNotifyControl::kContinue;
+		}
+
 		std::lock_guard<decltype(m_lock)> l(m_lock);
 
 		fixArmorNameMaps();

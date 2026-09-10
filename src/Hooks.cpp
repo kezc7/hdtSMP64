@@ -216,6 +216,22 @@ namespace Hooks
 		if (runtimeData.quitGame) {
 			Events::ShutdownEvent e;
 			Events::Sources::ShutdownEventEventSource::GetSingleton()->SendEvent(&e);
+		} else if (Events::LoadGuard::IsBlocked()) {
+			// Keep the existing load suspension active. This is deliberately on the main thread;
+			// SKSE/menu callbacks only mutate the atomic lifecycle state.
+			hdt::SkyrimPhysicsWorld::get()->suspend(true);
+			if (Events::LoadGuard::ConsumeSuppressedFrameLog()) {
+				logger::debug("HDT FrameEvent and FrameSyncEvent suppressed during load");
+			}
+
+			Events::LoadGuard::AdvanceMainThreadFrame();
+			if (Events::LoadGuard::IsBlocked()) {
+				return;
+			}
+
+			Events::FrameEvent e;
+			e.gamePaused = runtimeData.freezeTime;
+			Events::Sources::FrameEventSource::GetSingleton()->SendEvent(&e);
 		} else {
 			Events::FrameEvent e;
 			e.gamePaused = runtimeData.freezeTime;
@@ -228,8 +244,10 @@ namespace Hooks
 		_Unk_sub(a_this);
 
 		//
-		Events::FrameSyncEvent framesyncEvent;
-		Events::Sources::FrameSyncEventSource::GetSingleton()->SendEvent(&framesyncEvent);
+		if (!Events::LoadGuard::IsBlocked()) {
+			Events::FrameSyncEvent framesyncEvent;
+			Events::Sources::FrameSyncEventSource::GetSingleton()->SendEvent(&framesyncEvent);
+		}
 	}
 
 	bool ActorEquipManagerHooks::func(

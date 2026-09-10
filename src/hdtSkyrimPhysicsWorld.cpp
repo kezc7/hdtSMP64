@@ -324,6 +324,10 @@ namespace hdt
 
 	RE::BSEventNotifyControl SkyrimPhysicsWorld::ProcessEvent(const Events::FrameEvent* e, RE::BSTEventSource<Events::FrameEvent>*)
 	{
+		if (Events::LoadGuard::IsBlocked()) {
+			return RE::BSEventNotifyControl::kContinue;
+		}
+
 		auto mm = RE::UI::GetSingleton();
 
 		if ((e->gamePaused || mm->GameIsPaused()) && !m_suspended) {
@@ -367,6 +371,10 @@ namespace hdt
 
 	RE::BSEventNotifyControl SkyrimPhysicsWorld::ProcessEvent(const Events::FrameSyncEvent*, RE::BSTEventSource<Events::FrameSyncEvent>*)
 	{
+		if (Events::LoadGuard::IsBlocked()) {
+			return RE::BSEventNotifyControl::kContinue;
+		}
+
 		if (m_doMetrics) {
 			LARGE_INTEGER ticks, freq;
 			QueryPerformanceCounter(&ticks);

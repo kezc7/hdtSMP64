@@ -663,6 +663,8 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 		break;
 	case SKSE::MessagingInterface::kPreLoadGame:
 		{
+			Events::LoadGuard::PreLoadGame();
+
 			std::string save_name = reinterpret_cast<char*>(a_msg->data);
 			save_name = save_name.substr(0, save_name.find_last_of("."));
 
@@ -673,6 +675,9 @@ void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
 				hdt::Override::OverrideManager::GetSingleton()->Deserialize(data);
 			}
 		}
+		break;
+	case SKSE::MessagingInterface::kPostLoadGame:
+		Events::LoadGuard::PostLoadGame();
 		break;
 	case SKSE::MessagingInterface::kPostPostLoad:
 		{
