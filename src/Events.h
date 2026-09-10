@@ -2,6 +2,20 @@
 
 namespace Events
 {
+	namespace LoadGuard
+	{
+		// Load/new-world lifecycle state used to keep HDT callbacks away from Skyrim's save restore window.
+		void LoadingMenuOpened();
+		void LoadingMenuClosed();
+		void PreLoadGame();
+		void PostLoadGame();
+
+		[[nodiscard]] bool IsBlocked();
+		[[nodiscard]] bool ConsumeSuppressedFrameLog();
+		// Must be called from the main thread after Skyrim's own update.
+		void AdvanceMainThreadFrame();
+	}
+
 	struct FrameEvent
 	{
 		bool gamePaused;
